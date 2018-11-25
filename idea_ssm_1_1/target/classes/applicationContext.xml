@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+       <context:component-scan base-package="org.java"/>
+
+       <context:property-placeholder location="classpath:jdbc.properties"/>
+
+       <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+              <property name="driverClass" value="${driver}"/>
+              <property name="jdbcUrl" value="${url}"/>
+              <property name="user" value="${user}"/>
+              <property name="password" value="${pwd}"/>
+       </bean>
+
+       <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+              <property name="dataSource" ref="dataSource"/>
+              <property name="configLocation" value="classpath:mybatis-config.xml"/>
+              <property name="mapperLocations"  value="classpath:mapper/*Mapper.xml"/>
+       </bean>
+
+       <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+               <property name="basePackage" value="org.java.dao"/>
+
+       </bean>
+
+       <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+              <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+              <property name="suffix" value=".jsp"/>
+       </bean>
+</beans>
