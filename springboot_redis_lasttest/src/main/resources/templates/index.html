@@ -59,7 +59,7 @@
             <td colspan="5">
                 共<span style="color: red;">[[${count}]]</span>条数据&nbsp;
                 共<span style="color: red;">[[${maxPage}]]</span>页&nbsp;
-                每页显示<span style="color: red;">[[${size}]]</span>条
+                每页显示<span style="color: red;">[[${size}]] </span>条
                 &nbsp;
                 <select id="currPage" onchange="location.href='loadPrd?currPage='+this.value">
                     <div th:each="k:${#numbers.sequence(1,maxPage)}">
