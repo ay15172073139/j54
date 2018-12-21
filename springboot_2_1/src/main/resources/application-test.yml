@@ -1,0 +1,7 @@
+org:
+  j54:
+    name: aaa
+    address: 湖北省
+
+server:
+  port: 7777

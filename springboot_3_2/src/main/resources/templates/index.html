@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <script th:src="@{/js/jquery-1.12.4.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <style type="text/css">
+        .table th, .table td {
+              text-align: center;
+              vertical-align: middle!important;
+          }
+        a{
+            text-decoration: none;
+            color: blue;
+            font-weight: bold;
+        }
+        a:hover{
+            color:red;
+        }
+    </style>
+    <script th:inline="javascript">
+        function changePage() {
+           var currPage=$('#currPage').val();
+           var size=$('#size').val();
+           location.href="init?currPage="+currPage+"&size="+size
+        }
+    </script>
+</head>
+<body>
+<div class="Controller col-md-10 col-md-offset-1">
+    <table class="table table-bordered table-condensed table-striped">
+        <tr align="center">
+            <th class="col-md-1">编号</th>
+            <th class="col-md-1">姓名</th>
+            <th class="col-md-1">性别</th>
+            <th class="col-md-1">班级</th>
+            <th class="col-md-1">成绩</th>
+            <th class="col-md-1">出生日期</th>
+            <th class="col-md-1">等级</th>
+            <th class="col-md-2">操作</th>
+        </tr>
+        <tr align="center" th:each="k,st:${list}">
+            <td th:text="${st.count+(currPage-1)*size}"></td>
+            <td th:text="${k.name}"></td>
+            <td th:text="${k.gender}"></td>
+            <td th:text="${k.clazz}"></td>
+            <td th:text="${k.score}"></td>
+            <td th:text="${k.bir}"></td>
+            <td>
+                <span th:if="${k.score ge 90}" style="color: green;font-weight: bold">优秀</span>
+                <span th:if="${k.score ge 70 && k.score lt 90}" style="color: blue;font-weight: bold">良好</span>
+                <span th:if="${k.score ge 60 && k.score lt 70}" style="color: orange;font-weight: bold">合格</span>
+                <span th:if="${k.score lt 60}" style="color: red;font-weight: bold">不合格</span>
+            </td>
+            <td>
+                <a href="#" onclick="return confirm('你确定要删除此条信息吗?')" class="btn btn-primary" th:href="@{|/del/${k.id}/${currPage}|}">删除</a>
+                <a href="#" class="btn btn-danger" th:href="@{|/forward/save|}">添加</a>
+                <a href="#" class="btn btn-success" th:href="@{|/modify/${k.id}|}">修改</a>
+            </td>
+        </tr>
+        <tr align="center">
+            <td colspan="8">
+                <span th:if="${currPage==1}">
+                   &nbsp; 首页&nbsp;&nbsp;&nbsp;&nbsp;上一页&nbsp;
+                </span>
+                <span th:if="${currPage>1}">&nbsp;
+                    <a th:href="@{|/init?currPage=1&size=${size}|}">首页</a>&nbsp; <a th:href="@{|/init?currPage=${currPage-1}&size=${size}|}">上一页</a>
+                </span>&nbsp;
+                <span th:if="${currPage==maxPage}">
+                   &nbsp; 下一页&nbsp;&nbsp;&nbsp;&nbsp;尾页&nbsp;
+                </span>
+                <span th:if="${currPage<maxPage}">
+                   &nbsp; <a th:href="@{|/init?currPage=${currPage+1}&size=${size}|}">下一页</a>&nbsp; <a th:href="@{|/init?currPage=${maxPage}&size=${size}|}">尾页</a>&nbsp;
+                </span>
+
+                &nbsp;&nbsp;
+                共<span style="color: red;">[[${count}]]</span>条数据&nbsp;
+                共<span style="color: red;">[[${maxPage}]]</span>页&nbsp;
+                每页显示<select id="size" onchange="location.href='init?size='+this.value">
+                   <div th:each="k:${#numbers.sequence(1,4)}">
+                       <span th:if="${size==k*5}">
+                           <option th:value="${k*5}" selected>[[${k*5}]]</option>
+                       </span>
+                       <span th:if="${size!=k*5}">
+                           <option th:value="${k*5}">[[${k*5}]]</option>
+                       </span>
+                   </div>
+                </select>条
+                &nbsp;
+                <select id="currPage" onchange="changePage()">
+                    <div th:each="k:${#numbers.sequence(1,maxPage)}">
+                        <span th:if="${currPage==k}">
+                            <option th:value="${k}" selected>第[[${k}]]页</option>
+                        </span>
+                        <span th:if="${currPage!=k}">
+                            <option th:value="${k}">第[[${k}]]页</option>
+                        </span>
+                    </div>
+                </select>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
