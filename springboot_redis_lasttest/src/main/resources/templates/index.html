@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        a{
+            text-decoration: none;
+            color: blue;
+            font-weight: bold;
+        }
+        a:hover{
+            color:red;
+        }
+        img{
+            width: 80px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body style="margin: 0px">
+    <div th:if="${session.userId == null}">
+        <form th:action="@{/login}" method="post">
+            用户名: <input type="text" name="uname" id="uname"> &nbsp;  密码:<input type="text" name="upwd" id="upwd">&nbsp;<input
+                type="submit" value="登录"/>[[${session.msg}]]
+        </form>
+    </div>
+    <div th:if="${session.userId != null}">
+       [[${session.userId}]],欢迎您回来！&nbsp;&nbsp;
+        <a href="#" th:href="@{/showCart}">查看购物车</a>&nbsp;&nbsp;
+        <a href="#" th:href="@{|/logout|}">注销登录</a>
+    </div>
+    <hr>
+    <table width="60%" border="0" align="center">
+        <tr align="center">
+            <th>编号</th>
+            <th>商品名称</th>
+            <th>单价</th>
+            <th>样式</th>
+            <th>购买</th>
+        </tr>
+        <tr align="center" th:each="k,st:${list}">
+            <td th:text="${st.count+(currPage-1)*size}"></td>
+            <td th:text="${k.name}"></td>
+            <td th:text="${k.price}"></td>
+            <td>
+               <img th:src="@{|/${k.pic}|}">
+            </td>
+            <td>
+                <span th:if="${session.userId == null}">
+                    <a href="#" onclick="alert('请先登录再购买')">加入购物车</a>
+                </span>
+                <span th:if="${session.userId != null}">
+                    <a href="#" th:href="@{|/addCart?id=${k.id}|}">加入购物车</a>
+                </span>
+            </td>
+        </tr>
+        <tr align="center">
+            <td colspan="5">
+                共<span style="color: red;">[[${count}]]</span>条数据&nbsp;
+                共<span style="color: red;">[[${maxPage}]]</span>页&nbsp;
+                每页显示<span style="color: red;">[[${size}]]</span>条
+                &nbsp;
+                <select id="currPage" onchange="location.href='loadPrd?currPage='+this.value">
+                    <div th:each="k:${#numbers.sequence(1,maxPage)}">
+                        <span th:if="${currPage==k}">
+                            <option th:value="${k}" selected>第[[${k}]]页</option>
+                        </span>
+                        <span th:if="${currPage!=k}">
+                            <option th:value="${k}">第[[${k}]]页</option>
+                        </span>
+                    </div>
+                </select>
+                &nbsp;&nbsp;
+                <span th:if="${currPage==1}">
+                   &nbsp; 首页&nbsp;&nbsp;&nbsp;&nbsp;上一页&nbsp;
+                </span>
+                <span th:if="${currPage>1}">&nbsp;
+                    <a th:href="@{|/loadPrd?currPage=1|}">首页</a>&nbsp; <a th:href="@{|/loadPrd?currPage=${currPage-1}|}">上一页</a>
+                </span>&nbsp;
+                <span th:if="${currPage==maxPage}">
+                   &nbsp; 下一页&nbsp;&nbsp;&nbsp;&nbsp;尾页&nbsp;
+                </span>
+                <span th:if="${currPage<maxPage}">
+                   &nbsp; <a th:href="@{|/loadPrd?currPage=${currPage+1}|}">下一页</a>&nbsp; <a th:href="@{|/loadPrd?currPage=${maxPage}|}">尾页</a>&nbsp;
+                </span>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style type="text/css">
+        a{
+            text-decoration: none;
+            color: blue;
+            font-weight: bold;
+        }
+        a:hover{
+            color:red;
+        }
+        img{
+            width: 80px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body style="margin: 0px">
+<table width="60%" border="0" align="center">
+    [[${session.userId}]],您的购物信息如下:
+    <hr>
+    <tr align="center">
+        <th>商品名称</th>
+        <th>单价</th>
+        <th>购买数量</th>
+        <th>小计</th>
+        <th>样式</th>
+        <th>移除</th>
+    </tr>
+    <tr align="center" th:each="k,st:${list}">
+        <span th:if="${k.amount>=1}">
+        <td th:text="${k.name}"></td>
+        <td th:text="${k.price}"></td>
+        <td th:text="${k.amount}"></td>
+        <td th:text="${k.amount*k.price}"></td>
+        <td>
+            <img th:src="@{|/${k.pic}|}">
+        </td>
+        <td>
+            <a th:href="@{|/updateCart?id=${k.id}&type=1|}">增加</a>&nbsp; <a th:href="@{|/updateCart?id=${k.id}&type=2|}">减少</a>&nbsp; <a th:href="@{|/updateCart?id=${k.id}&type=3|}">移除</a>
+        </td>
+        </span>
+    </tr>
+</table>
+<hr>
+应付总金额:[[${zong}]]元  &nbsp;<a th:href="@{/loadPrd}">继续购物</a>  &nbsp;<a th:href="@{/delallCart}">清空购物车</a>
+</body>
+</html>
